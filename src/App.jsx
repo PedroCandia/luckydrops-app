@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './App.css';
+import AdBanner from './AdBanner';
 import { getRandomChallenge } from './raritySystem';
 
 const OPEN_DELAY = 1150;
@@ -73,23 +74,26 @@ function App() {
   };
 
   return (
-    <main className="game-screen">
-      <div className="stadium-lights" />
-      <div className="arena-grid" />
-      <section className="game-stage" aria-label="Lucky Blocks RL">
-        <p className="eyebrow">Rocket League Challenge Drop</p>
-        <h1>Lucky Blocks RL</h1>
-        <p className="subtitle">
-          Rompe el bloque, recibe un reto y lleva la partida al caos.
-        </p>
+    <>
+      <main className="game-screen">
+        <div className="stadium-lights" />
+        <div className="arena-grid" />
+        <section className="game-stage" aria-label="Lucky Blocks RL">
+          <p className="eyebrow">Rocket League Challenge Drop</p>
+          <h1>Lucky Blocks RL</h1>
+          <p className="subtitle">
+            Rompe el bloque, recibe un reto y lleva la partida al caos.
+          </p>
 
-        <div className="block-stage">
-          <LuckyBlock isOpening={isOpening} onOpen={openLuckyBlock} />
-        </div>
+          <div className="block-stage">
+            <LuckyBlock isOpening={isOpening} onOpen={openLuckyBlock} />
+          </div>
 
-        <ChallengeCard challenge={challenge} onReset={openLuckyBlock} />
-      </section>
-    </main>
+          <ChallengeCard challenge={challenge} onReset={openLuckyBlock} />
+        </section>
+      </main>
+      <AdBanner />
+    </>
   );
 }
 
