@@ -6,46 +6,145 @@
   box-sizing: border-box;
 }
 
-.game-screen {
+.app-shell {
   position: relative;
-  min-height: 100vh;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-  padding: 32px 18px;
+  min-height: 200vh;
   color: #f8fbff;
+  overflow: visible;
   background:
-    radial-gradient(circle at 20% 20%, rgba(56, 168, 255, 0.26), transparent 28%),
-    radial-gradient(circle at 82% 16%, rgba(255, 212, 90, 0.22), transparent 24%),
-    radial-gradient(circle at 50% 82%, rgba(183, 107, 255, 0.24), transparent 30%),
-    linear-gradient(135deg, #071019 0%, #111321 44%, #080a12 100%);
+    radial-gradient(circle at 50% 35%, rgba(126, 87, 194, 0.25), transparent 35%),
+    linear-gradient(135deg, #0b1726 0%, #111320 45%, #080a12 100%);
+  isolation: isolate;
 }
 
-.stadium-lights,
-.arena-grid {
+.app-shell::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-shell::after {
+  left: 0;
+  right: 0;
+  top: 48vh;
+  bottom: 0;
+  background:
+    linear-gradient(rgba(74, 213, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 213, 255, 0.12) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(transparent, black 12%, black);
+  transform: perspective(520px) rotateX(58deg) translateY(6%);
+  transform-origin: bottom center;
+}
+
+.stadium-light-rig {
   position: absolute;
   inset: 0;
+  z-index: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 
-.stadium-lights {
-  background:
-    linear-gradient(105deg, transparent 0 37%, rgba(73, 198, 255, 0.18) 38% 39%, transparent 40%),
-    linear-gradient(75deg, transparent 0 58%, rgba(255, 224, 120, 0.18) 59% 60%, transparent 61%),
-    radial-gradient(ellipse at 50% -15%, rgba(255, 255, 255, 0.22), transparent 52%);
-  filter: blur(0.5px);
+.stadium-light {
+  position: absolute;
+  bottom: -20%;
+  width: var(--beam-width);
+  height: 180vh;
+  opacity: var(--beam-opacity);
+  filter: blur(28px);
+  background: linear-gradient(
+    to top,
+    rgba(var(--beam-color), 0.2),
+    rgba(var(--beam-color), 0.08) 34%,
+    transparent 76%
+  );
+  transform: translateX(-50%) rotate(var(--beam-rotation));
+  transform-origin: bottom center;
+  mix-blend-mode: screen;
 }
 
-.arena-grid {
-  top: auto;
-  height: 42vh;
-  background:
-    linear-gradient(rgba(74, 213, 255, 0.24) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(74, 213, 255, 0.16) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(transparent, black 34%, black);
-  transform: perspective(520px) rotateX(58deg) translateY(30%);
-  transform-origin: bottom center;
+.stadium-light-1 {
+  left: 9%;
+  --beam-width: 150px;
+  --beam-opacity: 0.12;
+  --beam-rotation: -18deg;
+  --beam-color: 73, 198, 255;
+}
+
+.stadium-light-2 {
+  left: 18%;
+  --beam-width: 190px;
+  --beam-opacity: 0.1;
+  --beam-rotation: -10deg;
+  --beam-color: 143, 232, 255;
+}
+
+.stadium-light-3 {
+  left: 31%;
+  --beam-width: 130px;
+  --beam-opacity: 0.08;
+  --beam-rotation: 7deg;
+  --beam-color: 126, 87, 194;
+}
+
+.stadium-light-4 {
+  left: 42%;
+  --beam-width: 170px;
+  --beam-opacity: 0.11;
+  --beam-rotation: -6deg;
+  --beam-color: 56, 168, 255;
+}
+
+.stadium-light-5 {
+  left: 58%;
+  --beam-width: 140px;
+  --beam-opacity: 0.09;
+  --beam-rotation: 8deg;
+  --beam-color: 143, 232, 255;
+}
+
+.stadium-light-6 {
+  left: 68%;
+  --beam-width: 210px;
+  --beam-opacity: 0.13;
+  --beam-rotation: -8deg;
+  --beam-color: 73, 198, 255;
+}
+
+.stadium-light-7 {
+  left: 79%;
+  --beam-width: 160px;
+  --beam-opacity: 0.1;
+  --beam-rotation: 13deg;
+  --beam-color: 126, 87, 194;
+}
+
+.stadium-light-8 {
+  left: 88%;
+  --beam-width: 120px;
+  --beam-opacity: 0.08;
+  --beam-rotation: -15deg;
+  --beam-color: 143, 232, 255;
+}
+
+.stadium-light-9 {
+  left: 94%;
+  --beam-width: 180px;
+  --beam-opacity: 0.12;
+  --beam-rotation: 18deg;
+  --beam-color: 255, 224, 120;
+}
+
+.hero-section {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  overflow: visible;
+  display: grid;
+  place-items: center;
+  padding: 32px 18px 120px;
+  background: transparent;
 }
 
 .game-stage {
@@ -58,7 +157,6 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding-bottom: 76px;
   text-align: center;
 }
 
@@ -352,6 +450,126 @@ h1 {
   filter: brightness(1.08);
 }
 
+.collaborators-section {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  width: 100%;
+  overflow: visible;
+  margin-top: -80px;
+  padding: 80px 24px 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.collaborators-section h2 {
+  margin: 0 0 48px;
+  color: #ffffff;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+  text-align: center;
+  text-shadow:
+    0 0 24px rgba(180, 220, 255, 0.75),
+    0 0 48px rgba(244, 63, 185, 0.28);
+}
+
+.collaborators-grid {
+  width: min(920px, 100%);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 20px;
+}
+
+.collaborator-card {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 22px;
+  padding: 26px;
+  border: 1px solid rgba(143, 232, 255, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(244, 63, 185, 0.12), rgba(56, 168, 255, 0.08)),
+    rgba(7, 10, 18, 0.78);
+  box-shadow:
+    0 0 28px rgba(56, 168, 255, 0.18),
+    0 0 42px rgba(244, 63, 185, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-align: left;
+  backdrop-filter: blur(12px);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.collaborator-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 140, 220, 0.46);
+  box-shadow:
+    0 0 34px rgba(56, 168, 255, 0.25),
+    0 0 56px rgba(244, 63, 185, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.collaborator-avatar {
+  width: 112px;
+  height: 112px;
+  grid-row: span 2;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.72);
+  box-shadow:
+    0 0 22px rgba(244, 63, 185, 0.34),
+    0 0 34px rgba(56, 168, 255, 0.16);
+}
+
+.collaborator-copy {
+  min-width: 0;
+}
+
+.collaborator-copy h3 {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  line-height: 1.15;
+  letter-spacing: 0;
+}
+
+.collaborator-copy p {
+  margin: 0;
+  color: #c8d6ec;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.collaborator-link {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: start;
+  border: 1px solid rgba(255, 190, 225, 0.52);
+  border-radius: 8px;
+  padding: 0 18px;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(244, 63, 185, 0.92), rgba(56, 168, 255, 0.82));
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 12px 28px rgba(244, 63, 185, 0.2);
+  transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+}
+
+.collaborator-link:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 16px 34px rgba(56, 168, 255, 0.24);
+}
+
 @keyframes idlePulse {
   0%, 100% {
     opacity: 0.7;
@@ -413,8 +631,8 @@ h1 {
 }
 
 @media (max-width: 620px) {
-  .game-screen {
-    padding: 24px 14px;
+  .hero-section {
+    padding: 24px 14px 120px;
   }
 
   .game-stage {
@@ -432,6 +650,41 @@ h1 {
 
   .challenge-card {
     padding: 18px 14px;
+  }
+
+  .collaborators-section {
+    margin-top: -80px;
+    padding: 80px 16px 88px;
+  }
+
+  .stadium-light-3 {
+    display: none;
+  }
+
+  .collaborators-section h2 {
+    margin-bottom: 34px;
+  }
+
+  .collaborator-card {
+    grid-template-columns: 1fr;
+  }
+
+  .collaborator-card {
+    justify-items: center;
+    gap: 16px;
+    padding: 22px 18px;
+    text-align: center;
+  }
+
+  .collaborator-avatar {
+    width: 96px;
+    height: 96px;
+    grid-row: auto;
+  }
+
+  .collaborator-link {
+    width: 100%;
+    justify-self: stretch;
   }
 
   .particle {

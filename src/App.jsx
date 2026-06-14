@@ -1,9 +1,111 @@
 import { useState } from 'react';
 import './App.css';
-import AdBanner from './AdBanner';
+import Collaborators from './Collaborators';
 import { getRandomChallenge } from './raritySystem';
 
 const OPEN_DELAY = 1150;
+
+let audioContext;
+
+const getAudioContext = () => {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+
+  if (!AudioContextClass) {
+    return null;
+  }
+
+  if (!audioContext) {
+    audioContext = new AudioContextClass();
+  }
+
+  if (audioContext.state === 'suspended') {
+    audioContext.resume().catch(() => {});
+  }
+
+  return audioContext;
+};
+
+const playSound = (src, volume) => {
+  const audio = new Audio(src);
+  audio.currentTime = 0;
+  audio.volume = volume;
+  audio.play().catch(() => {});
+};
+
+const playTone = (context, { frequency, start, duration, volume, type = 'sine' }) => {
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, start);
+  gain.gain.setValueAtTime(0.0001, start);
+  gain.gain.exponentialRampToValueAtTime(volume, start + 0.015);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+  oscillator.connect(gain);
+  gain.connect(context.destination);
+  oscillator.start(start);
+  oscillator.stop(start + duration + 0.03);
+};
+
+const playChestOpenSound = () => {
+  playSound('/sounds/chest-open.wav', 0.5);
+
+  const context = getAudioContext();
+  if (!context) {
+    return;
+  }
+
+  const now = context.currentTime;
+  playTone(context, {
+    frequency: 150,
+    start: now,
+    duration: 0.22,
+    volume: 0.36,
+    type: 'triangle',
+  });
+  playTone(context, {
+    frequency: 330,
+    start: now + 0.05,
+    duration: 0.32,
+    volume: 0.16,
+    type: 'sawtooth',
+  });
+  playTone(context, {
+    frequency: 880,
+    start: now + 0.08,
+    duration: 0.12,
+    volume: 0.2,
+    type: 'square',
+  });
+};
+
+const playRewardRevealSound = () => {
+  playSound('/sounds/reward-reveal.wav', 0.45);
+
+  const context = getAudioContext();
+  if (!context) {
+    return;
+  }
+
+  const now = context.currentTime;
+  [523.25, 659.25, 783.99, 1046.5].forEach((frequency, index) => {
+    playTone(context, {
+      frequency,
+      start: now + index * 0.09,
+      duration: 0.46,
+      volume: 0.18,
+      type: 'sine',
+    });
+    playTone(context, {
+      frequency: frequency * 2,
+      start: now + index * 0.09,
+      duration: 0.32,
+      volume: 0.07,
+      type: 'triangle',
+    });
+  });
+};
 
 function LuckyBlock({ isOpening, onOpen }) {
   return (
@@ -64,21 +166,27 @@ function App() {
       return;
     }
 
+    playChestOpenSound();
+
     setChallenge(null);
     setIsOpening(true);
 
     window.setTimeout(() => {
       setChallenge(getRandomChallenge());
       setIsOpening(false);
+      playRewardRevealSound();
     }, OPEN_DELAY);
   };
 
   return (
-    <>
-      <main className="game-screen">
-        <div className="stadium-lights" />
-        <div className="arena-grid" />
-        <section className="game-stage" aria-label="Lucky Blocks RL">
+    <main className="app-shell">
+      <div className="stadium-light-rig" aria-hidden="true">
+        {Array.from({ length: 9 }).map((_, index) => (
+          <span key={index} className={`stadium-light stadium-light-${index + 1}`} />
+        ))}
+      </div>
+      <section className="hero-section">
+        <div className="game-stage" aria-label="Lucky Blocks RL">
           <p className="eyebrow">Rocket League Challenge Drop</p>
           <h1>Lucky Blocks RL</h1>
           <p className="subtitle">
@@ -90,10 +198,10 @@ function App() {
           </div>
 
           <ChallengeCard challenge={challenge} onReset={openLuckyBlock} />
-        </section>
-      </main>
-      <AdBanner />
-    </>
+        </div>
+      </section>
+      <Collaborators />
+    </main>
   );
 }
 
